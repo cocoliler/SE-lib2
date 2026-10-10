@@ -1,0 +1,25 @@
+se-lib2/
+├── app.py                    # CLI 入口：run / analyze / exec-test
+├── agent/
+│   ├── __init__.py
+│   ├── schemas.py            # 状态、消息、测试结果等数据结构
+│   ├── llm.py                # LLM 客户端 + 指数退避重试
+│   ├── prompts.py            # Generator / Executor / Orchestrator Prompt
+│   ├── test_generator.py     # 测试生成 Agent
+│   ├── test_executor.py      # 测试执行 Agent
+│   └── workflow.py           # Workflow 编排器 + 条件分支 + 重试
+├── tools/
+│   ├── __init__.py
+│   ├── file_tool.py          # 文件读取 / 测试写盘
+│   ├── code_tool.py          # Python AST（函数签名/类/导入）
+│   └── test_tool.py          # unittest 执行 + stdout 解析
+├── examples/
+│   └── sample_module.py      # 示例：正确函数 + 故意带 Bug 的 broken_max
+├── tests/
+│   └── test_tools.py         # 工具层单元测试（不依赖 LLM）
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── Design.md
+├── README.md
+└── LICENSE
