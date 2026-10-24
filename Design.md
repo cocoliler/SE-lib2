@@ -226,18 +226,11 @@ Prompt 构造要点：
 
 ---
 
-## 7. 与评分标准的对应关系
 
-| 评分维度 | 权重 | 项目实现 |
-|---|---|---|
-| 流程完整性 | 40% | 端到端跑通：读取代码 → AST → 生成测试 → 写文件 → 执行 → 诊断 → 报告；含失败重试回路 |
-| Agent 协作 | 30% | 2 个 Agent + 1 编排器；通过 WorkflowState 共享数据，通过结构化消息 AgentMessage 通信，含时间戳与 payload |
-| 可扩展性 | 20% | 模块化拆分：schemas / llm / prompts / test_generator / test_executor / workflow / tools；新增 Agent 只需遵循相同的 state 读写约定，Workflow step 可按同样模式扩展 |
-| 文档 | 10% | README.md + Design.md + 流程图 + 使用示例 |
 
 ---
 
-## 8. 后续可扩展方向
+## 7. 后续可扩展方向
 
 - 接入 pytest，丰富用例类型（fixture / parametrize）
 - 引入 Coverage，把“覆盖率低”也作为 RETRY 触发条件
