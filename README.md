@@ -64,7 +64,7 @@ se-lib2/
 建议 Python 3.10+：
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
@@ -169,30 +169,8 @@ Orchestrator 在执行后判定：
 - 完全不能执行（语法/导入错 / 0 用例）且重试次数未满 → RETRY（回到生成阶段）
 - 否则 → FINISH（PARTIAL 或 FAILED，取决于是否存在有效执行）
 
-## 8. 示例演示建议
 
-课堂 / 作业展示流程：
-
-1. 先展示 `examples/sample_module.py`，指出其中 `broken_max` 是故意写错的函数；
-2. 运行 `python app.py analyze examples/sample_module.py`，展示 AST 工具正确提取了 6 个函数和 1 个类；
-3. 运行 `python app.py run examples/sample_module.py --max-retries 1`；
-4. 展示：
-   - Step 1/2：LLM 生成了 `test_sample_module.py` 并写入磁盘；
-   - Step 2/2：执行结果里 add/divide/factorial 等通过，broken_max 相关用例失败；
-   - Orchestrator 决策：因为不是“测试完全不能跑”，所以 FINISH，不会无谓重试；
-   - 最终诊断中 LLM 指出 `broken_max` 是代码 Bug，并给出修复建议；
-5. （可选）把 `broken_max` 改为正确实现，再跑一次，展示 SUCCESS。
-
-## 9. 设计亮点
-
-- **不只调用 LLM，而是工具增强**：先用 AST 给 LLM 提供确定的函数签名与参数信息，再生成测试，避免漏测 / 编造接口。
-- **真正的多 Agent 协作**：测试生成结果通过消息明确传递给执行者；执行结果又反馈给编排器；编排器的 RETRY 决定还会把诊断作为 history_notes 再喂给生成 Agent，形成迭代闭环。
-- **清晰的状态机**：`WorkflowStatus / StepStatus` 两级状态 + 每步 started_at / completed_at，满足“执行日志与状态追踪”的推荐要求。
-- **可扩展架构**：新增一个 Agent（如测试修复 Agent）只需按约定读写 `WorkflowState`，编排器按同样模式加一个 Step 即可。
-
-详细架构与 Workflow 流程图见 [Design.md](Design.md)。
-
-## 10. 已知限制
+## 8. 已知限制
 
 - 当前主要面向单模块或小批量模块的 unittest 生成，暂未集成 pytest / coverage。
 - LLM 调用失败会报错重试，连续失败会抛出异常，需要用户检查 API Key 与网络。
